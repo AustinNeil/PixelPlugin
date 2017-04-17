@@ -100,4 +100,28 @@ class Fbp_Plug_Admin {
 
 	}
 
+	public function add_plugin_admin_menu() {
+
+    // Add a settings page for this plugin to the Admin->Plugin->Settings menu.
+    add_options_page( 'Facebook Pixel Injector', 'Facebook Pixel', 'manage_options', $this->plugin_name, array($this, 'display_plugin_setup_page'));
+	
+	}
+
+	public function add_action_links( $links ) {
+    /*
+    *  Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
+    */
+   $settings_link = array(
+    '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __('Settings', $this->plugin_name) . '</a>',
+   );
+
+   return array_merge(  $settings_link, $links );
+   
+   }
+
+   	// Render the Settings Page
+	public function display_plugin_setup_page() {
+    include_once( 'partials/wp-cbf-admin-display.php' );
+}
+
 }
