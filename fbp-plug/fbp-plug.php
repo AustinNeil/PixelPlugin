@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       FacebookPixelPlugin
  * Plugin URI:        https://github.com/AustinNeil/PixelPlugin
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       This plugin is designed to automatically implement the Facebook Pixel script tag in the head of a file once the user adds their ID#
  * Version:           1.0.0
  * Author:            Austin Christensen
  * Author URI:        austinnchristensen.com
