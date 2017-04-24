@@ -7,6 +7,22 @@ Author: Austin Christensen
 Version: 0.0.3(Alpha)
  */ ?>
 <?php
+
+// function FBPInject_activate() {
+// 	register_uninstall_hook(__FILE__, 'FBPInject_uninstall');
+// }
+
+// register_activation_hook(__FILE__, 'FBPInject_activate');
+
+// function FBPInject_uninstall() {
+// 	// Unregister the new settings
+// 	unregister_setting('FBPInject-general-settings-group', 'PixelID', 'FBInject_validate_input');
+// 	unregister_setting('FBPInject-general-settings-group', 'Option2', 'FBInject_validate_input');
+// 	unregister_setting('FBPInject-general-settings-group', 'Option3', 'FBInject_validate_input');
+// 	unregister_setting('FBPInject-general-settings-group', 'Option4', 'FBInject_validate_input');
+// 	unregister_setting('FBPInject-general-settings-group', 'Option5', 'FBInject_validate_input');
+// }
+
 // Create a top level settings admin page
 add_action('admin_menu', 'FBPInject_create_menu');
 
@@ -20,7 +36,7 @@ function FBPInject_create_menu() {
 
 function register_FBPInject_settings() {
 	// Register the new settings
-	register_setting('FBPInject-general-settings-group', 'PixelID');
+	register_setting('FBPInject-general-settings-group', 'PixelID', 'FBInject_validate_pixelID_input');
 	register_setting('FBPInject-general-settings-group', 'Option2');
 	register_setting('FBPInject-general-settings-group', 'Option3');
 	register_setting('FBPInject-general-settings-group', 'Option4');
@@ -36,7 +52,7 @@ function FBPInject_render_settings_page() { ?>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row">PixelID</th>
-					<td><input type="number" name="PixelID" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
+					<td><input type="number" id="PixelID" name="PixelID" maxlength="15" minlength="15" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
 				</tr>
 				<tr valign="top">
 					<th scope="row">Option2</th>
@@ -61,21 +77,32 @@ function FBPInject_render_settings_page() { ?>
 	</div>
 <?php }
 
+function FBInject_validate_pixelID_input($input, inject_facebook_pixel()) {
+	$correctFormat = intval($_POST['PixelID']);
+	if(!$correctFormat) {
+		$correctFormat = 000000000000000;
+	}
+	if(!strlen($correctFormat) == 15) {
+		$correctFormat = substr($corr, 0,15);
+	}
+	update_post_meta($post->ID, 'PixelID', $correctFormat);
+
+}
+
 function inject_facebook_pixel() {?>
 	<!-- Facebook Pixel Code -->
-	<!-- Pixel ID is embedded here -->
 	<script>
 		!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 		n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 		n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 		t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 		document,'script','https://connect.facebook.net/en_US/fbevents.js');
-		fbq('init', 000000000000000); // Insert your pixel ID here.
+		fbq('init', <?php echo esc_attr(get_option('PixelID')); ?>);
 		fbq('track', 'PageView');
 	</script>
 	<!-- The Pixel ID is embedded below as well -->
 	<noscript><img height="1" width="1" style="display:none"
-		src="https://www.facebook.com/tr?id=000000000000000&ev=PageView&noscript=1"/>
+		src="https://www.facebook.com/tr?id=<?php echo esc_attr(get_option('PixelID')); ?>&ev=PageView&noscript=1"/>
 	</noscript>
 	<!-- DO NOT MODIFY -->
 	<!-- End Facebook Pixel Code -->
