@@ -4,28 +4,17 @@ Plugin Name: Alternate Plugin
 Plugin URI: http://austinnchristensen.com
 Description: Adds Facebook Pixel trascking code to the <head> of your theme, by hooking to wp_head.
 Author: Austin Christensen
-Version: 0.0.3(Alpha)
+Version: 0.0.5(Alpha)
  */ ?>
 <?php
 
-// function FBPInject_activate() {
-// 	register_uninstall_hook(__FILE__, 'FBPInject_uninstall');
-// }
-
-// register_activation_hook(__FILE__, 'FBPInject_activate');
-
-// function FBPInject_uninstall() {
-// 	// Unregister the new settings
-// 	unregister_setting('FBPInject-general-settings-group', 'PixelID', 'FBInject_validate_input');
-// 	unregister_setting('FBPInject-general-settings-group', 'Option2', 'FBInject_validate_input');
-// 	unregister_setting('FBPInject-general-settings-group', 'Option3', 'FBInject_validate_input');
-// 	unregister_setting('FBPInject-general-settings-group', 'Option4', 'FBInject_validate_input');
-// 	unregister_setting('FBPInject-general-settings-group', 'Option5', 'FBInject_validate_input');
-// }
+// On Activation - Creates default values in the database
+// On Uninstall - Removes the values saved within the database
 
 // Create a top level settings admin page
 add_action('admin_menu', 'FBPInject_create_menu');
 
+// Turn this into a sub-level menu
 function FBPInject_create_menu() {
 	// Create top level menu
 	add_menu_page('Facebook Pixel Settings', 'Manage Pixel Settings', 'administrator', 'Facebook-Pixel-Settings',
@@ -34,6 +23,7 @@ function FBPInject_create_menu() {
 	add_action('admin_init', 'register_FBPInject_settings');
 }
 
+// Get datavalidation added
 function register_FBPInject_settings() {
 	// Register the new settings
 	register_setting('FBPInject-general-settings-group', 'PixelID', 'FBInject_validate_pixelID_input');
@@ -43,6 +33,7 @@ function register_FBPInject_settings() {
 	register_setting('FBPInject-general-settings-group', 'Option5');
 }
 
+// Validate these inputs within the browser first
 function FBPInject_render_settings_page() { ?>
 	<div class="wrap">
 		<h1>Facebook Pixel Settings</h1>
@@ -75,9 +66,10 @@ function FBPInject_render_settings_page() { ?>
 			<?php submit_button('Update'); ?>
 		</form>
 	</div>
-<?php }
+<?php } 
 
-function FBInject_validate_pixelID_input($input, inject_facebook_pixel()) {
+// Validate the inputs on the server side
+function FBInject_validate_pixelID_input($input) {
 	$correctFormat = intval($_POST['PixelID']);
 	if(!$correctFormat) {
 		$correctFormat = 000000000000000;
@@ -89,6 +81,7 @@ function FBInject_validate_pixelID_input($input, inject_facebook_pixel()) {
 
 }
 
+// Called once the form has been submitted
 function inject_facebook_pixel() {?>
 	<!-- Facebook Pixel Code -->
 	<script>
