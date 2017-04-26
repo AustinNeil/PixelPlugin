@@ -53,7 +53,9 @@ function FBPInject_render_settings_page() { ?>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row">PixelID</th>
-					<td><input required autofocus placeholder="Enter your 15 digit PixelID" type="text" id="PixelID" name="PixelID" pattern="[0-9]{15}" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
+					<!-- Add back after finished with php validation: pattern="[0-9]{15}"  -->
+					<td><input required autofocus placeholder="Enter your 15 digit PixelID" type="text" id="PixelID" name="PixelID" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
+					<span><h3>Error</h3><?php echo $pixelErr;?></span>
 				</tr>
 				<tr valign="top">
 					<th scope="row">Option2</th>
@@ -75,10 +77,10 @@ function FBPInject_render_settings_page() { ?>
 <?php } 
 
 // Validate the inputs on the server side
-function FBInject_validate_pixelID_input($input) {
+function FBInject_validate_pixelID_input() {
 	// defines empty variables
-	$pixelErr = $option2Err = $option3Err = $option4Err = '';
-	$pixel = $option2 = $option3 = $option4 = '';
+	$pixelErr = "";
+	$pixel = "";
 	// testing
 	echo 'Validation Called!';
 	// make sure a post request is being made
@@ -96,14 +98,23 @@ function FBInject_validate_pixelID_input($input) {
 			$pixel = test_input($_POST["PixelID"]);
 			// check with a regex
 			if(!preg_match("^[0-9]{15}$", $pixel)) {
-				$nameErr = "Must contain exactly 15 digits";
+				$pixelErr = "Must contain exactly 15 digits";
 			} else {
-				echo "The number was a match and has been validated! WOO!!";
+				echo "The number was a match for the format and has been validated! WOO!!";
+				return $pixel;
 			}
 		}
 	}
+	return $pixel;
 }
-
+// Takes data from the input, sanitizes completely
+// used within the validate_input function
+function test_input($data) {
+	$data = trim($data);
+	$data = stripslashes($data);
+	$data = htmlspecialchars($data);
+	return $data;
+}
 // Called once the form has been submitted
 function inject_facebook_pixel() {?>
 	<!-- Facebook Pixel Code -->
@@ -124,6 +135,10 @@ function inject_facebook_pixel() {?>
 	<!-- End Facebook Pixel Code -->
 <?php }
 
+if(isset($_POST['submit'] || $_SERVER["REQUEST_METHOD"] = "POST")) {
+	FBInject_validate_pixelID_input();
+}
+//When Update button is pressed
 // THIS NEEDS TO BE DONE AFTER THE USER UPDATES THE SETTINGS
 // Call inject_facebook_pixel function where wp_head hook appears
 // add_action('wp_head', 'inject_facebook_pixel');
