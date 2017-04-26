@@ -37,7 +37,7 @@ function FBPInject_render_settings_page() { ?>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row">PixelID</th>
-					<td><input type="number" id="PixelID" name="PixelID" maxlength="15" minlength="15" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
+					<td><input type="number" id="PixelID" name="PixelID" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
 				</tr>
 				<tr valign="top">
 					<th scope="row">Option2</th>
