@@ -1,4 +1,3 @@
-<!-- Required Heading -->
 <?php /*
 Plugin Name: Alternate Plugin
 Plugin URI: http://austinnchristensen.com
@@ -54,19 +53,19 @@ function FBPInject_render_settings_page() { ?>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row">PixelID</th>
-					<td><input type="number" id="PixelID" name="PixelID" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
+					<td><input required autofocus placeholder="Enter your 15 digit PixelID" type="text" id="PixelID" name="PixelID" pattern="[0-9]{15}" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
 				</tr>
 				<tr valign="top">
 					<th scope="row">Option2</th>
-					<td><input type="text" name="Option2" value="<?php echo esc_attr(get_option('Option2')); ?>"></td>
+					<td><input disabled type="text" name="Option2" value="<?php echo esc_attr(get_option('Option2')); ?>"></td>
 				</tr>
 				<tr valign="top">
 					<th scope="row">Option3</th>
-					<td><input type="text" name="Option3" value="<?php echo esc_attr(get_option('Option3')); ?>"></td>
+					<td><input disabled="text" name="Option3" value="<?php echo esc_attr(get_option('Option3')); ?>"></td>
 				</tr>				
 				<tr valign="top">
 					<th scope="row">Option4</th>
-					<td><input type="text" name="Option4" value="<?php echo esc_attr(get_option('Option4')); ?>"></td>
+					<td><input disabled="text" name="Option4" value="<?php echo esc_attr(get_option('Option4')); ?>"></td>
 				</tr>				
 			</table>
 			<!-- NEED TO CLEAN, SANITIZE, AND CONFIRM DATA HERE FOR UPDATING -->
