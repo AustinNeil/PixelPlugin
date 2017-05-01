@@ -3,7 +3,7 @@ Plugin Name: Serious Social Media
 Plugin URI: http://austinnchristensen.com
 Description: Adds Facebook Pixel tracking code to the <head> of your theme, allowing for general Facebook Pixel integration. The Pixel ID can be updated within the settings page on the left admin bar.
 Author: Austin Christensen
-Version: 1.0.0(Beta)
+Version: 1.0.1(Beta)
  */ ?>
 <?php
 // Create a top level settings admin page
@@ -29,7 +29,12 @@ function register_FBPInject_settings() {
 }
 
 // Validate these inputs within the browser first
-function FBPInject_render_settings_page() { ?>
+function FBPInject_render_settings_page() {
+	// Determine if the user has manage / admin rights to change settings
+    if (!current_user_can('manage_options')) {
+    	// if they do not, die
+        wp_die('You do not have sufficient permissions to access this page.');
+    } ?>
 	<div class="wrap">
 		<h1>Facebook Pixel Settings</h1>
 		<!-- SUBMIT TO OWN PAGE FOR TESTING -->
@@ -39,19 +44,19 @@ function FBPInject_render_settings_page() { ?>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row">PixelID</th>
-					<td><input required autofocus placeholder="Enter your 15 digit PixelID" type="text" id="PixelID" name="PixelID" pattern="[0-9]{15}" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
+					<td><input required autofocus placeholder="15 Digit PixelID" type="text" id="PixelID" name="PixelID" pattern="[0-9]{15}" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
 				</tr>
 				<tr valign="top">
 					<th scope="row">Option2</th>
-					<td><input disabled type="text" name="Option2" value="<?php echo esc_attr(get_option('Option2')); ?>"></td>
+					<td><input disabled type="hidden" name="Option2" value="<?php echo esc_attr(get_option('Option2')); ?>"></td>
 				</tr>
 				<tr valign="top">
 					<th scope="row">Option3</th>
-					<td><input disabled="text" name="Option3" value="<?php echo esc_attr(get_option('Option3')); ?>"></td>
+					<td><input disabled type="hidden" name="Option3" value="<?php echo esc_attr(get_option('Option3')); ?>"></td>
 				</tr>				
 				<tr valign="top">
 					<th scope="row">Option4</th>
-					<td><input disabled="text" name="Option4" value="<?php echo esc_attr(get_option('Option4')); ?>"></td>
+					<td><input disabled type="hidden" name="Option4" value="<?php echo esc_attr(get_option('Option4')); ?>"></td>
 				</tr>				
 			</table>
 			<!-- NEED TO CLEAN, SANITIZE, AND CONFIRM DATA HERE FOR UPDATING -->
@@ -60,7 +65,7 @@ function FBPInject_render_settings_page() { ?>
 	</div>
 <?php } 
 
-// Called once the form has been submitted
+// Called on the head hook everytime after the plugin is activated
 function inject_facebook_pixel() {?>
 	<!-- Facebook Pixel Code -->
 	<script>
@@ -79,8 +84,30 @@ function inject_facebook_pixel() {?>
 	<!-- DO NOT MODIFY -->
 	<!-- End Facebook Pixel Code -->
 <?php }
+
 // Call inject_facebook_pixel function where wp_head hook appears
 add_action('wp_head', 'inject_facebook_pixel');
+
+// Call injectFBP_plugin_action_links in the plugin_action_links area (in the plugin settings, includes deactivate and edit)
+add_filter('plugin_action_links', 'injectFBP_plugin_action_links', 10, 2);
+
+// Defines a function that adds a link to the settings page next to the plugin options
+function injectFBP_plugin_action_links($links, $file) {
+	// Creates a constant of the plugin
+    static $this_plugin;
+    if (!$this_plugin) {
+    	// if the plugin isn't correct, it find the absolute path to the file and corrects it
+        $this_plugin = plugin_basename(__FILE__);
+    }
+    if ($file == $this_plugin) {
+    	// Build the $settings_link variable- wpurl is better than just url in every case!
+        $settings_link = '<a href="' . get_bloginfo('wpurl') . '/wp-admin/admin.php?page=Facebook-Pixel-Settings">Settings</a>';
+        // Adds $settings_link to the beginning of the $links array. $links contains "deactivate" and "edit" also
+        array_unshift($links, $settings_link);
+    }
+    // Return the $links array
+    return $links;
+}
 
 // For Later Release
 // Validate the inputs on the server side
