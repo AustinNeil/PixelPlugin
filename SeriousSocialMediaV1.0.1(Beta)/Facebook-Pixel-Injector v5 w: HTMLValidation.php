@@ -22,10 +22,11 @@ function FBPInject_create_menu() {
 function register_FBPInject_settings() {
 	// Register the new settings
 	register_setting('FBPInject-general-settings-group', 'PixelID');
-	register_setting('FBPInject-general-settings-group', 'Option2');
-	register_setting('FBPInject-general-settings-group', 'Option3');
-	register_setting('FBPInject-general-settings-group', 'Option4');
-	register_setting('FBPInject-general-settings-group', 'Option5');
+	// 4 additional settings that can be added later by uncommenting and removing the "hidden" type in the render function
+	// register_setting('FBPInject-general-settings-group', 'Option2');
+	// register_setting('FBPInject-general-settings-group', 'Option3');
+	// register_setting('FBPInject-general-settings-group', 'Option4');
+	// register_setting('FBPInject-general-settings-group', 'Option5');
 }
 
 // Validate these inputs within the browser first
@@ -108,36 +109,4 @@ function injectFBP_plugin_action_links($links, $file) {
     // Return the $links array
     return $links;
 }
-
-// For Later Release
-// Validate the inputs on the server side
-// function FBInject_validate_pixelID_input($input) {
-// 	// defines empty variables
-// 	$pixelErr = $option2Err = $option3Err = $option4Err = '';
-// 	$pixel = $option2 = $option3 = $option4 = '';
-// 	// testing
-// 	echo 'Validation Called!';
-// 	// make sure a post request is being made
-// 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
-// 		// testing
-// 		echo "METHOD IS POST";
-// 		// make sure the field is filled
-// 		if(empty($_POST["PixelID"])) {
-// 			// if not filled, have an error
-// 			echo "ID not entered!";
-// 			$pixelErr = "PixelID is required";
-// 			// if field is filled continue to validate
-// 		} else {
-// 			echo "ID WAS entered!";
-// 			$pixel = test_input($_POST["PixelID"]);
-// 			// check with a regex
-// 			if(!preg_match("^[0-9]{15}$", $pixel)) {
-// 				$nameErr = "Must contain exactly 15 digits";
-// 			} else {
-// 				echo "The number was a match and has been validated! WOO!!";
-// 			}
-// 		}
-// 	}
-// }
-
 ?>
