@@ -1,25 +1,11 @@
 <?php /*
-Plugin Name: Alternate Plugin
+Plugin Name: Serious Social Media
 Plugin URI: http://austinnchristensen.com
-Description: Adds Facebook Pixel trascking code to the <head> of your theme, by hooking to wp_head.
+Description: Adds Facebook Pixel tracking code to the <head> of your theme, allowing for general Facebook Pixel integration. The Pixel ID can be updated within the settings page on the left admin bar.
 Author: Austin Christensen
-Version: 0.0.5(Alpha)
+Version: 1.0.0(Beta)
  */ ?>
 <?php
-
-// On Activation - Creates default values in the database
-// On Uninstall - Removes the custom options saved within the options.php
-// UNINSTALL CURRENTLY DOES NOT WORK CURRECTLY
-// register_uninstall_hook(__FILE__, 'FBPInject_uninstall');
-
-// function FBPInject_uninstall(){
-// 	delete_option('PixelID');
-// 	delete_option('Option2');
-// 	delete_option('Option3');
-// 	delete_option('Option4');
-// 	delete_option('Option5');
-// }
-
 // Create a top level settings admin page
 add_action('admin_menu', 'FBPInject_create_menu');
 
@@ -74,36 +60,6 @@ function FBPInject_render_settings_page() { ?>
 	</div>
 <?php } 
 
-// Validate the inputs on the server side
-function FBInject_validate_pixelID_input($input) {
-	// defines empty variables
-	$pixelErr = $option2Err = $option3Err = $option4Err = '';
-	$pixel = $option2 = $option3 = $option4 = '';
-	// testing
-	echo 'Validation Called!';
-	// make sure a post request is being made
-	if ($_SERVER["REQUEST_METHOD"] == "POST") {
-		// testing
-		echo "METHOD IS POST";
-		// make sure the field is filled
-		if(empty($_POST["PixelID"])) {
-			// if not filled, have an error
-			echo "ID not entered!";
-			$pixelErr = "PixelID is required";
-			// if field is filled continue to validate
-		} else {
-			echo "ID WAS entered!";
-			$pixel = test_input($_POST["PixelID"]);
-			// check with a regex
-			if(!preg_match("^[0-9]{15}$", $pixel)) {
-				$nameErr = "Must contain exactly 15 digits";
-			} else {
-				echo "The number was a match and has been validated! WOO!!";
-			}
-		}
-	}
-}
-
 // Called once the form has been submitted
 function inject_facebook_pixel() {?>
 	<!-- Facebook Pixel Code -->
@@ -123,8 +79,38 @@ function inject_facebook_pixel() {?>
 	<!-- DO NOT MODIFY -->
 	<!-- End Facebook Pixel Code -->
 <?php }
-
-// THIS NEEDS TO BE DONE AFTER THE USER UPDATES THE SETTINGS
 // Call inject_facebook_pixel function where wp_head hook appears
-// add_action('wp_head', 'inject_facebook_pixel');
+add_action('wp_head', 'inject_facebook_pixel');
+
+// For Later Release
+// Validate the inputs on the server side
+// function FBInject_validate_pixelID_input($input) {
+// 	// defines empty variables
+// 	$pixelErr = $option2Err = $option3Err = $option4Err = '';
+// 	$pixel = $option2 = $option3 = $option4 = '';
+// 	// testing
+// 	echo 'Validation Called!';
+// 	// make sure a post request is being made
+// 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// 		// testing
+// 		echo "METHOD IS POST";
+// 		// make sure the field is filled
+// 		if(empty($_POST["PixelID"])) {
+// 			// if not filled, have an error
+// 			echo "ID not entered!";
+// 			$pixelErr = "PixelID is required";
+// 			// if field is filled continue to validate
+// 		} else {
+// 			echo "ID WAS entered!";
+// 			$pixel = test_input($_POST["PixelID"]);
+// 			// check with a regex
+// 			if(!preg_match("^[0-9]{15}$", $pixel)) {
+// 				$nameErr = "Must contain exactly 15 digits";
+// 			} else {
+// 				echo "The number was a match and has been validated! WOO!!";
+// 			}
+// 		}
+// 	}
+// }
+
 ?>
