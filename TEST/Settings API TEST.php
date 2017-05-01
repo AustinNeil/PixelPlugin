@@ -1,9 +1,9 @@
 <?php /*
 Plugin Name: Alternate Plugin
 Plugin URI: http://austinnchristensen.com
-Description: Adds Facebook Pixel trascking code to the <head> of your theme, by hooking to wp_head.
+Description: Adds Facebook Pixel tracking code to the <head> of your theme, by hooking to wp_head.
 Author: Austin Christensen
-Version: 0.0.5(Alpha)
+Version: 0.0.6(Alpha)
  */ ?>
 <?php
 
@@ -161,7 +161,7 @@ function inject_facebook_pixel() {?>
 	<!-- End Facebook Pixel Code -->
 <?php }
 
-if(isset($_POST['submit'] || $_SERVER["REQUEST_METHOD"] = "POST")) {
+if(isset($_POST['submit']) || ($_SERVER["REQUEST_METHOD"] = "POST")) {
 	FBInject_validate_pixelID_input();
 }
 //When Update button is pressed
