@@ -11,11 +11,26 @@ $section // ID of the settings section (needs to be the same as $id in add_setti
 $args // array() – additional arguments
 
 
-settings_fields($option_group);
 register_setting($option_group, $option_name, $sanitize_callback=“”);
 unregister_setting($option_group, $option_name, $sanitize_callback=“”);
 add_settings_section($id, $title, $callback, $page);
 add_settings_field($id, $title, $callback, $page, $section, $args = array());
+settings_fields($option_group);
 do_settings_sections($page)
 
 ?>
+
+
+
+1)
+register_setting($option_group, $option_name, $sanitize_callback=“”);
+
+2)
+add_settings_section($id, $title, $callback, $page);
+
+3)
+add_settings_field($id, $title, $callback, $page, $section, $args = array());
+
+4)
+do_settings_sections($page)
+settings_fields($option_group);
