@@ -47,8 +47,8 @@ function FBPInject_render_settings_page() {
 					<td><input required autofocus placeholder="15 Digit PixelID" type="text" id="PixelID" name="PixelID" pattern="[0-9]{15}" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
 				</tr>
 				<tr valign="top">
-					<th scope="row">Option2</th>
-					<td><input disabled type="hidden" name="Option2" value="<?php echo esc_attr(get_option('Option2')); ?>"></td>
+					<th scope="row">Disable</th>
+					<td><input type="hidden" name="Option2" value="<?php echo esc_attr(get_option('Option2')); ?>"></td>
 				</tr>
 				<tr valign="top">
 					<th scope="row">Option3</th>
@@ -85,9 +85,6 @@ function inject_facebook_pixel() {?>
 	<!-- End Facebook Pixel Code -->
 <?php }
 
-// Call inject_facebook_pixel function where wp_head hook appears
-add_action('wp_head', 'inject_facebook_pixel');
-
 // Call injectFBP_plugin_action_links in the plugin_action_links area (in the plugin settings, includes deactivate and edit)
 add_filter('plugin_action_links', 'injectFBP_plugin_action_links', 10, 2);
 
@@ -108,6 +105,19 @@ function injectFBP_plugin_action_links($links, $file) {
     // Return the $links array
     return $links;
 }
+
+// Only inject pixel ID if it isn't set to the default value
+if(!(esc_attr(get_option('PixelID'))) == 000000000000000) {
+	// Call inject_facebook_pixel function where wp_head hook appears
+	add_action('wp_head', 'inject_facebook_pixel');
+}
+
+
+
+
+
+
+
 
 // For Later Release
 // Validate the inputs on the server side
