@@ -1,6 +1,6 @@
 <?php /*
-Plugin Name: Serious Social Media
-Plugin URI: http://austinnchristensen.com
+Plugin Name: Serious Social Media — Facebook Pixel
+Plugin URI: https://www.insurancesocial.media/
 Description: Adds Facebook Pixel tracking code to the <head> of your theme, allowing for general Facebook Pixel integration. The Pixel ID can be updated within the settings page on the left admin bar.
 Author: Austin Christensen
 Version: 1.0.1(Beta)
@@ -47,18 +47,18 @@ function FBPInject_render_settings_page() {
 					<th scope="row">PixelID</th>
 					<td><input required autofocus placeholder="15 Digit PixelID" type="text" id="PixelID" name="PixelID" pattern="[0-9]{15}" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
 				</tr>
-				<tr valign="top">
+<!-- 				<tr valign="top">
 					<th scope="row">Option2</th>
-					<td><input disabled type="hidden" name="Option2" value="<?php echo esc_attr(get_option('Option2')); ?>"></td>
+					<td><input disabled type="hidden" name="Option2" value="<?php // echo esc_attr(get_option('Option2')); ?>"></td>
 				</tr>
 				<tr valign="top">
 					<th scope="row">Option3</th>
-					<td><input disabled type="hidden" name="Option3" value="<?php echo esc_attr(get_option('Option3')); ?>"></td>
+					<td><input disabled type="hidden" name="Option3" value="<?php // echo esc_attr(get_option('Option3')); ?>"></td>
 				</tr>				
 				<tr valign="top">
 					<th scope="row">Option4</th>
-					<td><input disabled type="hidden" name="Option4" value="<?php echo esc_attr(get_option('Option4')); ?>"></td>
-				</tr>				
+					<td><input disabled type="hidden" name="Option4" value="<?php // echo esc_attr(get_option('Option4')); ?>"></td>
+				</tr> -->				
 			</table>
 			<!-- NEED TO CLEAN, SANITIZE, AND CONFIRM DATA HERE FOR UPDATING -->
 			<?php submit_button('Update'); ?>
