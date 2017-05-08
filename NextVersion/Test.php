@@ -1,6 +1,6 @@
 <?php /*
-Plugin Name: Serious Social Media
-Plugin URI: http://austinnchristensen.com
+Plugin Name: Serious Social Media — Facebook Pixel
+Plugin URI: https://www.insurancesocial.media/
 Description: Adds Facebook Pixel tracking code to the <head> of your theme, allowing for general Facebook Pixel integration. The Pixel ID can be updated within the settings page on the left admin bar.
 Author: Austin Christensen
 Version: 1.0.1(Beta)
@@ -22,7 +22,8 @@ function FBPInject_create_menu() {
 function register_FBPInject_settings() {
 	// Register the new settings
 	register_setting('FBPInject-general-settings-group', 'PixelID');
-	// register_setting('FBPInject-general-settings-group', 'Option2');
+	register_setting('FBPInject-general-settings-group', 'CustomTrackingURL1');
+	// 3 additional settings that can be added later by uncommenting and removing the "hidden" type in the render function
 	// register_setting('FBPInject-general-settings-group', 'Option3');
 	// register_setting('FBPInject-general-settings-group', 'Option4');
 	// register_setting('FBPInject-general-settings-group', 'Option5');
@@ -36,8 +37,10 @@ function FBPInject_render_settings_page() {
         wp_die('You do not have sufficient permissions to access this page.');
     } ?>
 	<div class="wrap">
-		<h1>Facebook Pixel Settings</h1>
-		<!-- SUBMIT TO OWN PAGE FOR TESTING -->
+		<h1>Facebook Pixel Settings</h1>	
+  <?php if(isset($_POST['UpdateButton'])){
+		echo "<h3> Successfully Updated </h3>";
+	} ?>
 		<form method="POST" action="options.php">
 			<?php settings_fields('FBPInject-general-settings-group'); ?>
 			<?php do_settings_sections('FBPInject-general-settings-group'); ?>
@@ -47,20 +50,20 @@ function FBPInject_render_settings_page() {
 					<td><input required autofocus placeholder="15 Digit PixelID" type="text" id="PixelID" name="PixelID" pattern="[0-9]{15}" value="<?php echo esc_attr(get_option('PixelID')); ?>"></td>
 				</tr>
 				<tr valign="top">
-					<th scope="row">Disable</th>
-					<td><input type="hidden" name="Option2" value="<?php echo esc_attr(get_option('Option2')); ?>"></td>
+					<th scope="row">Custom URL to Track</th>
+					<td><input type="text" name="CustomTrackingURL1" value="<?php echo esc_attr(get_option('CustomTrackingURL1')); ?>"></td>
 				</tr>
-				<tr valign="top">
+<!-- 			<tr valign="top">
 					<th scope="row">Option3</th>
-					<td><input disabled type="hidden" name="Option3" value="<?php echo esc_attr(get_option('Option3')); ?>"></td>
+					<td><input disabled type="hidden" name="Option3" value="<?php // echo esc_attr(get_option('Option3')); ?>"></td>
 				</tr>				
 				<tr valign="top">
 					<th scope="row">Option4</th>
-					<td><input disabled type="hidden" name="Option4" value="<?php echo esc_attr(get_option('Option4')); ?>"></td>
-				</tr>				
+					<td><input disabled type="hidden" name="Option4" value="<?php // echo esc_attr(get_option('Option4')); ?>"></td>
+				</tr> -->				
 			</table>
 			<!-- NEED TO CLEAN, SANITIZE, AND CONFIRM DATA HERE FOR UPDATING -->
-			<?php submit_button('Update'); ?>
+			<?php submit_button('Update', 'primary', 'UpdateButton'); ?>
 		</form>
 	</div>
 <?php } 
@@ -85,6 +88,9 @@ function inject_facebook_pixel() {?>
 	<!-- End Facebook Pixel Code -->
 <?php }
 
+// Call inject_facebook_pixel function where wp_head hook appears
+add_action('wp_head', 'inject_facebook_pixel');
+
 // Call injectFBP_plugin_action_links in the plugin_action_links area (in the plugin settings, includes deactivate and edit)
 add_filter('plugin_action_links', 'injectFBP_plugin_action_links', 10, 2);
 
@@ -106,48 +112,9 @@ function injectFBP_plugin_action_links($links, $file) {
     return $links;
 }
 
-// Only inject pixel ID if it isn't set to the default value
-if(!(esc_attr(get_option('PixelID'))) == 000000000000000) {
-	// Call inject_facebook_pixel function where wp_head hook appears
-	add_action('wp_head', 'inject_facebook_pixel');
+function inject_facebook_pixel_customurlview() {
+
 }
 
-
-
-
-
-
-
-
-// For Later Release
-// Validate the inputs on the server side
-// function FBInject_validate_pixelID_input($input) {
-// 	// defines empty variables
-// 	$pixelErr = $option2Err = $option3Err = $option4Err = '';
-// 	$pixel = $option2 = $option3 = $option4 = '';
-// 	// testing
-// 	echo 'Validation Called!';
-// 	// make sure a post request is being made
-// 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
-// 		// testing
-// 		echo "METHOD IS POST";
-// 		// make sure the field is filled
-// 		if(empty($_POST["PixelID"])) {
-// 			// if not filled, have an error
-// 			echo "ID not entered!";
-// 			$pixelErr = "PixelID is required";
-// 			// if field is filled continue to validate
-// 		} else {
-// 			echo "ID WAS entered!";
-// 			$pixel = test_input($_POST["PixelID"]);
-// 			// check with a regex
-// 			if(!preg_match("^[0-9]{15}$", $pixel)) {
-// 				$nameErr = "Must contain exactly 15 digits";
-// 			} else {
-// 				echo "The number was a match and has been validated! WOO!!";
-// 			}
-// 		}
-// 	}
-// }
 
 ?>
